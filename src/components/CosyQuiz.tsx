@@ -3,7 +3,14 @@ import { GoogleGenAI, Type } from "@google/genai";
 import { Sparkles, X, ChevronRight, Home, Thermometer, Dog, Leaf } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+// Support both AI Studio (process.env) and Netlify/Standard Vite (import.meta.env)
+const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY || (typeof process !== 'undefined' ? process.env.GEMINI_API_KEY : '');
+
+if (!GEMINI_API_KEY) {
+  console.warn("GEMINI_API_KEY is not defined. Please set VITE_GEMINI_API_KEY in your environment.");
+}
+
+const ai = new GoogleGenAI({ apiKey: GEMINI_API_KEY || 'dummy_key' });
 
 export const CosyQuiz = ({ isOpen, setIsOpen }: { isOpen: boolean, setIsOpen: (open: boolean) => void }) => {
   const [step, setStep] = useState(0);
